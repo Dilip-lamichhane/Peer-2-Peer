@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Favicon Generator</title>
+</head>
+<body>
+  <canvas id="favicon" width="32" height="32"></canvas>
+  <script>
+    // Get the canvas element
+    const canvas = document.getElementById('favicon');
+    const ctx = canvas.getContext('2d');
+    
+    // Draw a simple icon
+    ctx.fillStyle = '#4285f4'; // Google blue
+    ctx.fillRect(0, 0, 32, 32);
+    
+    // Draw a download arrow
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.moveTo(16, 8);
+    ctx.lineTo(16, 20);
+    ctx.lineTo(10, 14);
+    ctx.lineTo(16, 20);
+    ctx.lineTo(22, 14);
+    ctx.lineTo(16, 20);
+    ctx.lineTo(16, 8);
+    ctx.fill();
+    
+    // Draw the download line
+    ctx.fillRect(8, 22, 16, 2);
+    
+    // Convert to data URL
+    const dataUrl = canvas.toDataURL('image/png');
+    
+    // Create a link to download
+    const link = document.createElement('a');
+    link.download = 'favicon.ico';
+    link.href = dataUrl;
+    link.textContent = 'Download Favicon';
+    document.body.appendChild(link);
+    
+    // Auto-click the link
+    link.click();
+  </script>
+</body>
+</html> 

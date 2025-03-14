@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Secure peer-to-peer file sharing with no server storage - transfer files directly between devices">
+  <title>P2P File Sharing</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📁</text></svg>">
+</head>
+<body class="transition-theme">
+  <div class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+    <span class="material-icons dark">dark_mode</span>
+    <span class="material-icons light">light_mode</span>
+  </div>
+
+  <div class="container">
+    <header>
+      <h1>P2P File Sharing</h1>
+      <p class="tagline">Transfer files directly between devices - no server storage</p>
+    </header>
+
+    <div class="main-content">
+      <div class="connection-container">
+        <div class="connection-options">
+          <div class="option-card" id="send-option">
+            <div class="card-icon">
+              <span class="material-icons">send</span>
+            </div>
+            <h2>Send Files</h2>
+            <p>Generate a room code and share it with the recipient</p>
+            <button id="generate-code-btn" class="primary-btn">
+              <span class="material-icons">vpn_key</span>
+              Generate Code
+            </button>
+            <div id="room-code-display" class="room-code hidden">
+              <p>Share this code with the recipient:</p>
+              <div class="code-container">
+                <span id="room-code"></span>
+                <button id="copy-code-btn" class="icon-btn" aria-label="Copy code">
+                  <span class="material-icons">content_copy</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="option-card" id="receive-option">
+            <div class="card-icon">
+              <span class="material-icons">download</span>
+            </div>
+            <h2>Receive Files</h2>
+            <p>Enter the room code provided by the sender</p>
+            <div class="input-group">
+              <input type="text" id="room-code-input" placeholder="Enter 6-digit code" aria-label="Room code">
+              <button id="join-room-btn" class="primary-btn">
+                <span class="material-icons">login</span>
+                Connect
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-transfer-container hidden" id="file-selection">
+        <h2>
+          <span class="material-icons">cloud_upload</span>
+          Select Files to Send
+        </h2>
+        <div class="file-upload-area">
+          <input type="file" id="file-input" multiple aria-label="Choose files to upload">
+          <label for="file-input" class="file-input-label">
+            <span class="material-icons">upload_file</span>
+            <span>Choose Files or Drop Them Here</span>
+          </label>
+        </div>
+        <div id="selected-files-list" class="file-list"></div>
+        <button id="send-files-btn" class="primary-btn" disabled>
+          <span class="material-icons">send</span>
+          Send Files
+        </button>
+      </div>
+
+      <div class="file-transfer-container hidden" id="file-receiving">
+        <h2>
+          <span class="material-icons">cloud_download</span>
+          Receiving Files
+        </h2>
+        <div id="incoming-files-list" class="file-list"></div>
+      </div>
+
+      <div class="transfer-status hidden" id="transfer-status">
+        <h3>
+          <span class="material-icons">sync</span>
+          Transfer Progress
+        </h3>
+        <div class="progress-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="transfer-details">
+          <span id="transfer-percentage">0%</span>
+          <span id="transfer-speed">0 KB/s</span>
+          <span id="transfer-remaining">Calculating...</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connection-status">
+      <div id="status-indicator" class="status-indicator offline"></div>
+      <span id="connection-status-text">Disconnected</span>
+    </div>
+    
+    <div class="file-history-container hidden" id="file-history-container">
+      <div class="section-header">
+        <h2>
+          <span class="material-icons">history</span>
+          File Transfer History
+        </h2>
+        <button id="clear-history-btn" class="secondary-btn">
+          <span class="material-icons">delete</span>
+          Clear History
+        </button>
+      </div>
+      <div class="file-history-tabs">
+        <button class="history-tab active" data-tab="sent">Sent Files</button>
+        <button class="history-tab" data-tab="received">Received Files</button>
+      </div>
+      <div id="file-history-list" class="file-list"></div>
+      <div class="empty-history-message">
+        <span class="material-icons">info</span>
+        <p>No file transfer history available</p>
+      </div>
+    </div>
+    
+    <div class="help-container">
+      <details class="help-dropdown">
+        <summary>How to use this app</summary>
+        <div class="help-content">
+          <h3>To Send Files:</h3>
+          <ol>
+            <li>Click "Generate Code" in the Send Files section</li>
+            <li>Share the 6-digit code with the recipient</li>
+            <li>Wait for them to connect</li>
+            <li>Select files to send</li>
+            <li>Click "Send Files" button</li>
+          </ol>
+          
+          <h3>To Receive Files:</h3>
+          <ol>
+            <li>Enter the 6-digit code provided by the sender</li>
+            <li>Click "Connect" button</li>
+            <li>Wait for the sender to send files</li>
+            <li>Files will appear in the Receiving Files section</li>
+            <li>Click download button when transfer is complete</li>
+          </ol>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2023 P2P File Sharing | Secure, Fast, and Private</p>
+  </footer>
+
+  <script src="https://unpkg.com/simple-peer@9.11.1/simplepeer.min.js"></script>
+  <!-- Load modules in the correct order -->
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/connection.js"></script>
+  <script src="js/fileTransfer.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html> 
